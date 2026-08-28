@@ -191,13 +191,19 @@ export default function Home() {
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', menuOpen);
+    const mobileQuery = window.matchMedia('(max-width: 850px)');
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setMenuOpen(false);
     };
+    const closeOnDesktop = (event: MediaQueryListEvent) => {
+      if (!event.matches) setMenuOpen(false);
+    };
     window.addEventListener('keydown', closeOnEscape);
+    mobileQuery.addEventListener('change', closeOnDesktop);
     return () => {
       document.body.classList.remove('menu-open');
       window.removeEventListener('keydown', closeOnEscape);
+      mobileQuery.removeEventListener('change', closeOnDesktop);
     };
   }, [menuOpen]);
 
@@ -236,7 +242,7 @@ export default function Home() {
 
   return (
     <main className="site-shell">
-      <header className="site-header">
+      <header className={`site-header${menuOpen ? ' menu-active' : ''}`}>
         <a href="#inicio" className="brand" aria-label="Laura González, inicio">
           <span>LG</span>
           <small>ESTUDIO CREATIVO</small>
@@ -255,8 +261,10 @@ export default function Home() {
             {menuOpen ? <X /> : <Menu />}
           </button>
         </div>
-        {menuOpen && (
-          <>
+      </header>
+
+      {menuOpen && (
+        <>
           <button className="mobile-nav-backdrop" onClick={() => setMenuOpen(false)} aria-label="Cerrar menú" />
           <nav className="mobile-nav" id="mobile-navigation" aria-label="Navegación móvil">
             <div className="mobile-nav-intro"><span>LG</span><p>{language === 'es' ? 'Ideas claras. Contenido con alma.' : 'Clear ideas. Content with soul.'}</p></div>
@@ -267,9 +275,8 @@ export default function Home() {
               <a className="mobile-cv-link" href="/docs/laura-gonzalez-cv.pdf" download="Laura-Gonzalez-CV.pdf"><Download /> {t.downloadCv}</a>
             </div>
           </nav>
-          </>
-        )}
-      </header>
+        </>
+      )}
 
       <section className="hero" id="inicio">
         <div className="hero-copy">
