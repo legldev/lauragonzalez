@@ -183,6 +183,7 @@ export default function Home() {
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark);
     localStorage.setItem('laura-theme', dark ? 'dark' : 'light');
+    document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute('content', dark ? '#100810' : '#fff6f4');
   }, [dark]);
 
   useEffect(() => {
