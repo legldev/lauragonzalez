@@ -90,7 +90,9 @@ const copy = {
     brandPh: 'Nombre de tu marca',
     messagePh: '¿En qué etapa estás y cómo puedo ayudarte?',
     send: 'Enviar consulta',
-    sent: '¡Listo! Se abrirá WhatsApp para enviar tu consulta.',
+    sending: 'Enviando…',
+    sent: '¡Gracias! Tu consulta fue enviada. Laura te responderá muy pronto.',
+    sendError: 'No pudimos enviar tu consulta. Intentá nuevamente o escribile a Laura por WhatsApp.',
     direct: '¿Preferís hablar directo?',
     response: 'Respondo habitualmente dentro de 24–48 h hábiles.',
     footer: 'Estrategia digital · Contenido · Diseño web',
@@ -160,7 +162,9 @@ const copy = {
     brandPh: 'Your brand name',
     messagePh: 'Where are you now, and how can I help?',
     send: 'Send enquiry',
-    sent: 'All set! WhatsApp will open so you can send your enquiry.',
+    sending: 'Sending…',
+    sent: 'Thank you! Your enquiry has been sent. Laura will get back to you soon.',
+    sendError: 'We could not send your enquiry. Please try again or contact Laura on WhatsApp.',
     direct: 'Prefer to talk directly?',
     response: 'I usually reply within 24–48 business hours.',
     footer: 'Digital strategy · Content · Web design',
@@ -178,6 +182,8 @@ export default function Home() {
   });
   const [menuOpen, setMenuOpen] = useState(false);
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [sendError, setSendError] = useState(false);
   const t = copy[language];
 
   useEffect(() => {
@@ -218,25 +224,31 @@ export default function Home() {
     return () => observer.disconnect();
   }, [language]);
 
-  function submitContact(event: SyntheticEvent<HTMLFormElement, SubmitEvent>) {
+  async function submitContact(event: SyntheticEvent<HTMLFormElement, SubmitEvent>) {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const field = (name: string) => {
-      const value = data.get(name);
-      return typeof value === 'string' ? value.trim() : '';
-    };
-    const name = field('name');
-    const brand = field('brand');
-    const messageText = field('message');
-    const email = field('email');
-    const message = [
-      `Hola Laura, soy ${name}.`,
-      brand ? `Mi marca/proyecto es ${brand}.` : '',
-      messageText,
-      `Mi email es ${email}.`,
-    ].filter(Boolean).join('\n');
-    setSent(true);
-    window.open(`https://wa.me/5493516215635?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const encoded = new URLSearchParams();
+    data.forEach((value, key) => {
+      if (typeof value === 'string') encoded.append(key, value);
+    });
+    setSent(false);
+    setSendError(false);
+    setSubmitting(true);
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encoded.toString(),
+      });
+      if (!response.ok) throw new Error(`Form submission failed with status ${response.status}`);
+      form.reset();
+      setSent(true);
+    } catch {
+      setSendError(true);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const anchors = ['servicios', 'sobre-mi', 'experiencia', 'contacto'];
@@ -387,12 +399,18 @@ export default function Home() {
           <small>{t.response}</small>
         </div>
         <div className="contact-card reveal">
-          <form onSubmit={submitContact}>
+          <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" onSubmit={submitContact}>
+            <input type="hidden" name="form-name" value="contact" />
+            <input type="hidden" name="language" value={language} />
+            <p className="netlify-honeypot" aria-hidden="true"><label>Dejá este campo vacío<input name="bot-field" tabIndex={-1} autoComplete="off" /></label></p>
             <div className="form-row"><label>{t.name}<Input required name="name" placeholder={t.namePh} /></label><label>{t.email}<Input required type="email" name="email" placeholder={t.emailPh} /></label></div>
             <label>{t.brand}<Input name="brand" placeholder={t.brandPh} /></label>
             <label>{t.message}<Textarea required name="message" placeholder={t.messagePh} /></label>
-            <Button type="submit" size="lg" className="form-submit">{t.send}<ArrowUpRight /></Button>
-            {sent && <output className="form-success"><Check />{t.sent}</output>}
+            <Button type="submit" size="lg" className="form-submit" disabled={submitting}>{submitting ? t.sending : t.send}<ArrowUpRight /></Button>
+            <div className="form-feedback" aria-live="polite">
+              {sent && <output className="form-success"><Check />{t.sent}</output>}
+              {sendError && <output className="form-error">{t.sendError}</output>}
+            </div>
           </form>
           <div className="contact-photo"><img src="/images/laura-04.webp" alt="Laura González" width="768" height="1024" loading="lazy" decoding="async" /></div>
         </div>

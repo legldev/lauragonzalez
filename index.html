@@ -7,15 +7,7 @@
     <meta name="color-scheme" content="light dark" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <script>
-      try {
-        const savedTheme = localStorage.getItem('laura-theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const useDarkTheme = savedTheme === 'dark' || (!savedTheme && prefersDark);
-        document.documentElement.classList.toggle('dark', useDarkTheme);
-        document.getElementById('theme-color').content = useDarkTheme ? '#100810' : '#fff6f4';
-      } catch {}
-    </script>
+    <script src="/theme-init.js"></script>
     <meta name="description" content="Estrategia, contenido y experiencias digitales para marcas que quieren crecer con intención." />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="canonical" href="__SITE_URL__/" />
@@ -41,6 +33,15 @@
     <title>Laura González — Estrategia digital & contenido</title>
   </head>
   <body>
+    <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="contact" />
+      <input name="name" />
+      <input type="email" name="email" />
+      <input name="brand" />
+      <textarea name="message"></textarea>
+      <input name="language" />
+      <input name="bot-field" />
+    </form>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
