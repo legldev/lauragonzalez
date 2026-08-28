@@ -187,6 +187,18 @@ export default function Home() {
   }, [language]);
 
   useEffect(() => {
+    document.body.classList.toggle('menu-open', menuOpen);
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.body.classList.remove('menu-open');
+      window.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add('is-visible')),
       { threshold: 0.12 },
@@ -236,14 +248,22 @@ export default function Home() {
           <button className="icon-button" onClick={() => setDark((value) => !value)} aria-label={dark ? 'Activar modo claro' : 'Activar modo oscuro'}>
             {dark ? <Sun /> : <Moon />}
           </button>
-          <button className="icon-button mobile-menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Abrir menú" aria-expanded={menuOpen}>
+          <button className="icon-button mobile-menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'} aria-expanded={menuOpen} aria-controls="mobile-navigation">
             {menuOpen ? <X /> : <Menu />}
           </button>
         </div>
         {menuOpen && (
-          <nav className="mobile-nav" aria-label="Navegación móvil">
+          <>
+          <button className="mobile-nav-backdrop" onClick={() => setMenuOpen(false)} aria-label="Cerrar menú" />
+          <nav className="mobile-nav" id="mobile-navigation" aria-label="Navegación móvil">
+            <div className="mobile-nav-intro"><span>LG</span><p>{language === 'es' ? 'Ideas claras. Contenido con alma.' : 'Clear ideas. Content with soul.'}</p></div>
             {t.nav.map((item, index) => <a key={item} onClick={() => setMenuOpen(false)} href={`#${anchors[index]}`}>{item}<ChevronRight /></a>)}
+            <div className="mobile-nav-footer">
+              <button onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}><Globe2 /> {language === 'es' ? 'English version' : 'Versión en español'}</button>
+              <a href="https://wa.me/5493516215635" target="_blank" rel="noreferrer"><MessageCircle /> WhatsApp</a>
+            </div>
           </nav>
+          </>
         )}
       </header>
 
