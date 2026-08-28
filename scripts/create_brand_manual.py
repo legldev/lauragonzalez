@@ -381,9 +381,9 @@ label('06 · Fotografía', 48, H - 55, ROSE)
 txt('Laura, en primer plano.', 48, H - 111, 39, 'Display', WHITE)
 lines('La fotografía debe sentirse real, luminosa y segura. Premium no significa distante: la cercanía es parte de la marca.', 49, H - 152, 545, 10, 15, 'Sans', HexColor('#CDBBC1'))
 photos = [
-    (ROOT/'public/images/laura-05.jpeg', 48, 87, 248, 300, (.5,.2)),
-    (ROOT/'public/images/laura-02.jpeg', 312, 87, 226, 300, (.5,.18)),
-    (ROOT/'public/images/laura-01.jpeg', 554, 87, 240, 300, (.5,.15)),
+    (ROOT/'assets/photos/laura-05.jpeg', 48, 87, 248, 300, (.5,.2)),
+    (ROOT/'assets/photos/laura-02.jpeg', 312, 87, 226, 300, (.5,.18)),
+    (ROOT/'assets/photos/laura-01.jpeg', 554, 87, 240, 300, (.5,.15)),
 ]
 for path, x, y, w, h, focus in photos: crop_image(path, x, y, w, h, focus)
 txt('SÍ', 48, 56, 7, 'SansBold', ROSE); txt('Luz cálida · gestos naturales · encuadres limpios · textura · mirada segura', 76, 56, 7.5, 'Sans', WHITE)
@@ -415,7 +415,7 @@ title('Una presencia coherente', 48, H - 105, 38)
 round_rect(49, 80, 230, 385, 26, NIGHT)
 round_rect(61, 94, 206, 356, 18, PAPER)
 c.setFillColor(NIGHT); c.roundRect(118, 437, 92, 7, 4, stroke=0, fill=1)
-crop_image(ROOT/'public/images/laura-05.jpeg', 61, 286, 206, 164, (.5,.1))
+crop_image(ROOT/'assets/photos/laura-05.jpeg', 61, 286, 206, 164, (.5,.1))
 c.setFillColor(Color(.13,.07,.1,alpha=.34)); c.rect(61,286,206,164,stroke=0,fill=1)
 draw_monogram(91, 416, 17, WHITE)
 txt('Tu marca merece', 78, 257, 20, 'Display', INK)
@@ -430,7 +430,7 @@ draw_wordmark(672, 385, .58, INK, center=True)
 c.setStrokeColor(BURGUNDY); c.line(580, 330, 764, 330)
 txt('ESTRATEGIA · CONTENIDO · WEB', 672, 309, 6.2, 'SansBold', BURGUNDY, 'center')
 round_rect(316, 80, 477, 190, 8, NIGHT)
-crop_image(ROOT/'public/images/laura-03.jpeg', 316, 80, 185, 190, (.5,.25), '#6B3848')
+crop_image(ROOT/'assets/photos/laura-03.jpeg', 316, 80, 185, 190, (.5,.25), '#6B3848')
 txt('CRECER CON', 530, 212, 8, 'SansBold', ROSE); txt('intención.', 530, 160, 36, 'DisplayItalic', WHITE); lines('Consultoría digital para transformar ideas en una marca clara y deseada.', 531, 125, 220, 8.5, 13, 'Sans', HexColor('#CDBBC1'))
 next_page(12)
 
