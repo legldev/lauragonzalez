@@ -147,6 +147,7 @@ h1 em { color: var(--primary); font-weight: 500; }
 .about-copy > p:not(.section-eyebrow) { color: var(--muted); font-size: 14px; line-height: 1.9; }.about-copy h2 { margin-bottom: 35px; }
 .about-copy blockquote { margin: 35px 0; padding: 25px 0 25px 28px; border-left: 2px solid var(--primary); font: italic 500 25px/1.35 var(--font-display); }
 .based { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }.based svg { width: 18px; color: var(--primary); }
+.cv-download { width: max-content; min-height: 52px; display: inline-flex; align-items: center; gap: 11px; margin-top: 24px; padding: 0 18px; border: 1px solid var(--border); border-radius: 999px; background: color-mix(in srgb,var(--surface) 82%,var(--accent-soft)); color: var(--foreground); font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; box-shadow: 0 12px 30px rgba(74,25,51,.08); transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease, color .35s ease; }.cv-download svg { width: 16px; color: var(--primary); transition: transform .35s ease; }.cv-download svg:last-child { margin-left: 5px; }.cv-download:hover { transform: translateY(-4px); border-color: color-mix(in srgb,var(--primary) 45%,var(--border)); color: var(--primary); box-shadow: 0 18px 38px rgba(74,25,51,.15); }.cv-download:hover svg:first-child { transform: translateY(3px); }.cv-download:hover svg:last-child { transform: translate(3px,3px); }
 
 .journey-section { background: var(--surface-2); }
 .journey-title, .journey-layout { max-width: 1240px; margin-left: auto; margin-right: auto; }.journey-title { margin-bottom: 65px; }
@@ -391,6 +392,7 @@ footer { background: linear-gradient(120deg,#120a10,#23101d,#120a10); }
   .mobile-nav-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: auto; padding-top: 24px; }
   .mobile-nav-footer button, .mobile-nav-footer a { min-height: 50px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--border); border-radius: 999px; background: color-mix(in srgb,var(--surface) 72%,transparent); color: var(--foreground); font: 800 10px/1 var(--font-body); letter-spacing: .08em; text-transform: uppercase; }
   .mobile-nav-footer a { border-color: transparent; background: linear-gradient(120deg,var(--primary),var(--plum)); color: var(--primary-foreground); }
+  .mobile-nav-footer .mobile-cv-link { grid-column: 1/-1; border-color: var(--border); background: color-mix(in srgb,var(--surface) 74%,var(--accent-soft)); color: var(--foreground); }
   .hero { min-height: auto; gap: 38px; padding-top: 44px; }
   .hero-visual { min-height: 550px; }
   .services-grid { grid-template-columns: repeat(2,1fr); }
@@ -418,6 +420,7 @@ footer { background: linear-gradient(120deg,#120a10,#23101d,#120a10); }
   .services-grid { grid-template-columns: 1fr; gap: 13px; }.service-card { min-height: 300px; border-radius: 19px; }.service-card-top { margin-bottom: 36px; }
   .manifesto { min-height: 480px; padding-inline: 18px; }.manifesto-rings { width: 390px; height: 390px; }
   .about-collage { min-height: 500px; }.about-main-img { inset: 0 10% 15% 0; }.about-small-img { width: 46%; height: 34%; border-radius: 16px; }.roundel { width: 92px; height: 92px; }
+  .cv-download { width: 100%; justify-content: center; }
   .journey-title { margin-bottom: 42px; }.journey-layout { gap: 32px; }.experience-stack { gap: 13px; }.experience-card { border-radius: 18px; padding: 26px 22px; }
   .skills-panel { min-height: 530px; border-radius: 20px; }.skills-card { border-radius: 15px; }
   .approach-heading { margin-bottom: 42px; }.steps { grid-template-columns: 1fr; gap: 11px; }.step { min-height: 245px; border-radius: 18px; }.step-icon { margin: 28px 0 24px; }

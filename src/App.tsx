@@ -4,6 +4,7 @@ import {
   ArrowUpRight,
   Check,
   ChevronRight,
+  Download,
   Globe2,
   Heart,
   Menu,
@@ -58,6 +59,7 @@ const copy = {
     aboutP2: 'Mi recorrido en salud me enseñó a escuchar, cuidar los detalles y acompañar con empatía. Hoy transformo esa sensibilidad en comunicación clara, contenido con propósito y experiencias digitales que acercan personas.',
     aboutQuote: '“Creo en las marcas que no necesitan gritar para dejar huella.”',
     based: 'Radicada en Córdoba · trabajando globalmente',
+    downloadCv: 'Descargar CV',
     journeyEyebrow: 'MI RECORRIDO',
     journeyTitle: <>Experiencia que une<br /><em>organización y creatividad.</em></>,
     current: 'Actualidad',
@@ -127,6 +129,7 @@ const copy = {
     aboutP2: 'My healthcare background taught me to listen, care about the details and support people with empathy. Today, I turn that sensitivity into clear communication, purposeful content and digital experiences that bring people closer.',
     aboutQuote: '“I believe in brands that don’t need to shout to leave a mark.”',
     based: 'Based in Córdoba · working globally',
+    downloadCv: 'Download CV',
     journeyEyebrow: 'MY JOURNEY',
     journeyTitle: <>Experience that brings together<br /><em>organization and creativity.</em></>,
     current: 'Present',
@@ -261,6 +264,7 @@ export default function Home() {
             <div className="mobile-nav-footer">
               <button onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}><Globe2 /> {language === 'es' ? 'English version' : 'Versión en español'}</button>
               <a href="https://wa.me/5493516215635" target="_blank" rel="noreferrer"><MessageCircle /> WhatsApp</a>
+              <a className="mobile-cv-link" href="/docs/laura-gonzalez-cv.pdf" download="Laura-Gonzalez-CV.pdf"><Download /> {t.downloadCv}</a>
             </div>
           </nav>
           </>
@@ -333,6 +337,7 @@ export default function Home() {
           <p>{t.aboutP1}</p><p>{t.aboutP2}</p>
           <blockquote>{t.aboutQuote}</blockquote>
           <div className="based"><Globe2 /><span>{t.based}</span></div>
+          <a className="cv-download" href="/docs/laura-gonzalez-cv.pdf" download="Laura-Gonzalez-CV.pdf"><Download /><span>{t.downloadCv}</span><ArrowDownRight /></a>
         </div>
       </section>
 
