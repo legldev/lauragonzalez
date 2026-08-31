@@ -18,12 +18,88 @@ import {
   Target,
   X,
 } from 'lucide-react';
-import { type SyntheticEvent, useEffect, useState } from 'react';
+import { type SyntheticEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
 type Language = 'es' | 'en';
+
+type TurnstileApi = {
+  render: (
+    container: HTMLElement,
+    options: {
+      sitekey: string;
+      action: string;
+      theme: 'light' | 'dark';
+      callback: (token: string) => void;
+      'expired-callback': () => void;
+      'error-callback': () => void;
+    },
+  ) => string;
+  remove: (widgetId: string) => void;
+};
+
+declare global {
+  interface Window {
+    turnstile?: TurnstileApi;
+  }
+}
+
+const TURNSTILE_SITE_KEY = '0x4AAAAAAEiirMpRu5_32qE6';
+let turnstileScriptPromise: Promise<TurnstileApi> | undefined;
+
+function loadTurnstile() {
+  if (window.turnstile) return Promise.resolve(window.turnstile);
+  if (turnstileScriptPromise) return turnstileScriptPromise;
+
+  turnstileScriptPromise = new Promise<TurnstileApi>((resolve, reject) => {
+    const existingScript = document.querySelector<HTMLScriptElement>('script[data-turnstile-script]');
+    const script = existingScript ?? document.createElement('script');
+    const handleLoad = () => window.turnstile ? resolve(window.turnstile) : reject(new Error('Turnstile unavailable'));
+
+    script.addEventListener('load', handleLoad, { once: true });
+    script.addEventListener('error', () => reject(new Error('Turnstile failed to load')), { once: true });
+    if (!existingScript) {
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.defer = true;
+      script.dataset.turnstileScript = 'true';
+      document.head.append(script);
+    }
+  });
+
+  return turnstileScriptPromise;
+}
+
+function TurnstileWidget({ dark, resetKey, onVerify }: { dark: boolean; resetKey: number; onVerify: (token: string) => void }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let active = true;
+    let widgetId: string | undefined;
+    onVerify('');
+
+    void loadTurnstile().then((turnstile) => {
+      if (!active || !containerRef.current) return;
+      widgetId = turnstile.render(containerRef.current, {
+        sitekey: TURNSTILE_SITE_KEY,
+        action: 'contact',
+        theme: dark ? 'dark' : 'light',
+        callback: onVerify,
+        'expired-callback': () => onVerify(''),
+        'error-callback': () => onVerify(''),
+      });
+    }).catch(() => onVerify(''));
+
+    return () => {
+      active = false;
+      if (widgetId && window.turnstile) window.turnstile.remove(widgetId);
+    };
+  }, [dark, onVerify, resetKey]);
+
+  return <div className="turnstile-widget" ref={containerRef} />;
+}
 
 const copy = {
   es: {
@@ -91,6 +167,7 @@ const copy = {
     messagePh: '¿En qué etapa estás y cómo puedo ayudarte?',
     send: 'Enviar consulta',
     sending: 'Enviando…',
+    verify: 'Completá la verificación de seguridad para enviar.',
     sent: '¡Gracias! Tu consulta fue enviada. Laura te responderá muy pronto.',
     sendError: 'No pudimos enviar tu consulta. Intentá nuevamente o escribile a Laura por WhatsApp.',
     direct: '¿Preferís hablar directo?',
@@ -163,6 +240,7 @@ const copy = {
     messagePh: 'Where are you now, and how can I help?',
     send: 'Send enquiry',
     sending: 'Sending…',
+    verify: 'Complete the security check to send your enquiry.',
     sent: 'Thank you! Your enquiry has been sent. Laura will get back to you soon.',
     sendError: 'We could not send your enquiry. Please try again or contact Laura on WhatsApp.',
     direct: 'Prefer to talk directly?',
@@ -184,7 +262,11 @@ export default function Home() {
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [sendError, setSendError] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
   const t = copy[language];
+
+  const handleTurnstileToken = useCallback((token: string) => setTurnstileToken(token), []);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark);
@@ -232,11 +314,12 @@ export default function Home() {
     data.forEach((value, key) => {
       if (typeof value === 'string') encoded.append(key, value);
     });
+    encoded.set('cf-turnstile-response', turnstileToken);
     setSent(false);
     setSendError(false);
     setSubmitting(true);
     try {
-      const response = await fetch('/', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: encoded.toString(),
@@ -248,6 +331,8 @@ export default function Home() {
       setSendError(true);
     } finally {
       setSubmitting(false);
+      setTurnstileToken('');
+      setTurnstileResetKey((key) => key + 1);
     }
   }
 
@@ -406,7 +491,9 @@ export default function Home() {
             <div className="form-row"><label>{t.name}<Input required name="name" placeholder={t.namePh} /></label><label>{t.email}<Input required type="email" name="email" placeholder={t.emailPh} /></label></div>
             <label>{t.brand}<Input name="brand" placeholder={t.brandPh} /></label>
             <label>{t.message}<Textarea required name="message" placeholder={t.messagePh} /></label>
-            <Button type="submit" size="lg" className="form-submit" disabled={submitting}>{submitting ? t.sending : t.send}<ArrowUpRight /></Button>
+            <TurnstileWidget dark={dark} resetKey={turnstileResetKey} onVerify={handleTurnstileToken} />
+            {!turnstileToken && <p className="turnstile-help">{t.verify}</p>}
+            <Button type="submit" size="lg" className="form-submit" disabled={submitting || !turnstileToken}>{submitting ? t.sending : t.send}<ArrowUpRight /></Button>
             <div className="form-feedback" aria-live="polite">
               {sent && <output className="form-success"><Check />{t.sent}</output>}
               {sendError && <output className="form-error">{t.sendError}</output>}

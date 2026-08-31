@@ -28,4 +28,4 @@ Importar el repositorio `legldev/lauragonzalez` desde Netlify. El archivo `netli
 - políticas de seguridad y caché;
 - metadatos, sitemap y robots con la URL asignada por Netlify.
 
-No requiere variables privadas ni funciones de servidor.
+El formulario de contacto valida Cloudflare Turnstile en una función de Netlify antes de registrar la consulta. Requiere la variable privada `TURNSTILE_SECRET_KEY` en Netlify, disponible para Functions en producción y previews.
