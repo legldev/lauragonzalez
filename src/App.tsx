@@ -103,7 +103,7 @@ function TurnstileWidget({ dark, resetKey, onVerify }: { dark: boolean; resetKey
 
 const copy = {
   es: {
-    nav: ['Servicios', 'Sobre mí', 'Experiencia', 'Contacto'],
+    nav: ['Servicios', 'Portfolio', 'Sobre mí', 'Experiencia', 'Contacto'],
     available: 'Disponible para nuevos proyectos',
     location: 'Córdoba, Argentina · Para todo el mundo',
     hero: <>Tu marca merece<br />ser <em>inolvidable.</em></>,
@@ -127,6 +127,13 @@ const copy = {
       ['Consultoría & soporte virtual', 'Sesiones estratégicas, organización comercial, WhatsApp Business, seguimiento de clientes y procesos digitales.'],
     ],
     learn: 'Ver alcance',
+    portfolioEyebrow: 'PROYECTOS SELECCIONADOS',
+    portfolioTitle: <>Ideas que se convierten<br />en <em>experiencias digitales.</em></>,
+    portfolioIntro: 'Una selección de proyectos donde estrategia, diseño y contenido trabajan juntos para construir marcas claras y memorables.',
+    projectCategory: 'Diseño y desarrollo web',
+    projectTitle: 'Las Liebres Distribuciones',
+    projectDescription: 'Sitio web y catálogo digital para una distribuidora mayorista de Córdoba. Una experiencia ágil, responsive y enfocada en facilitar consultas y pedidos.',
+    projectLink: 'Ver proyecto',
     manifesto: 'No se trata de publicar por publicar.',
     manifesto2: <>Se trata de crear una marca que se <em>sienta</em>, se recuerde y se elija.</>,
     aboutEyebrow: 'LA PERSONA DETRÁS DE LA ESTRATEGIA',
@@ -176,7 +183,7 @@ const copy = {
     rights: 'Todos los derechos reservados.',
   },
   en: {
-    nav: ['Services', 'About', 'Experience', 'Contact'],
+    nav: ['Services', 'Portfolio', 'About', 'Experience', 'Contact'],
     available: 'Available for new projects',
     location: 'Córdoba, Argentina · Working worldwide',
     hero: <>Your brand deserves<br />to be <em>unforgettable.</em></>,
@@ -200,6 +207,13 @@ const copy = {
       ['Consulting & virtual support', 'Strategy sessions, commercial organization, WhatsApp Business, customer follow-up and digital processes.'],
     ],
     learn: 'Explore service',
+    portfolioEyebrow: 'SELECTED PROJECTS',
+    portfolioTitle: <>Ideas transformed<br />into <em>digital experiences.</em></>,
+    portfolioIntro: 'A selection of projects where strategy, design and content work together to build clear and memorable brands.',
+    projectCategory: 'Web design and development',
+    projectTitle: 'Las Liebres Distribuciones',
+    projectDescription: 'Website and digital catalog for a wholesale distributor in Córdoba. A fast, responsive experience focused on making enquiries and orders easier.',
+    projectLink: 'View project',
     manifesto: 'It’s not about posting just to post.',
     manifesto2: <>It’s about building a brand people can <em>feel</em>, remember and choose.</>,
     aboutEyebrow: 'THE PERSON BEHIND THE STRATEGY',
@@ -336,7 +350,7 @@ export default function Home() {
     }
   }
 
-  const anchors = ['servicios', 'sobre-mi', 'experiencia', 'contacto'];
+  const anchors = ['servicios', 'portfolio', 'sobre-mi', 'experiencia', 'contacto'];
 
   return (
     <main className="site-shell">
@@ -423,6 +437,23 @@ export default function Home() {
             );
           })}
         </div>
+      </section>
+
+      <section className="portfolio-section section-pad" id="portfolio">
+        <div className="section-heading reveal">
+          <div><p className="section-eyebrow">{t.portfolioEyebrow}</p><h2>{t.portfolioTitle}</h2></div>
+          <p>{t.portfolioIntro}</p>
+        </div>
+        <a className="portfolio-card reveal" href="https://lasliebresdistribuciones.com.ar/" target="_blank" rel="noreferrer" aria-label={`${t.projectLink}: ${t.projectTitle}`}>
+          <div className="portfolio-image"><img src="/images/portfolio-las-liebres.png" alt="Sitio web de Las Liebres Distribuciones" width="1366" height="768" loading="lazy" decoding="async" /></div>
+          <div className="portfolio-copy">
+            <p>{t.projectCategory}</p>
+            <h3>{t.projectTitle}</h3>
+            <span>{t.projectDescription}</span>
+            <div className="portfolio-tags"><b>UX/UI</b><b>Responsive</b><b>Catálogo digital</b></div>
+            <strong>{t.projectLink}<ArrowUpRight /></strong>
+          </div>
+        </a>
       </section>
 
       <section className="manifesto reveal">
