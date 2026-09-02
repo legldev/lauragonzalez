@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "vite build && node scripts/generate-netlify-assets.mjs",
+    "build": "vite build && node scripts/generate-netlify-assets.mjs && node scripts/generate-sites-worker.mjs",
     "preview": "vite preview --host 0.0.0.0",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint src components/ui/button.tsx components/ui/input.tsx components/ui/textarea.tsx lib/utils.ts vite.config.ts",
@@ -24,6 +24,7 @@
     "tailwind-merge": "3.6.0"
   },
   "devDependencies": {
+    "@openai/sites-vite-plugin": "^0.2.0",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",

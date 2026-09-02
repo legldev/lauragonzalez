@@ -1,4 +1,5 @@
 import react from '@vitejs/plugin-react';
+import { sites } from '@openai/sites-vite-plugin';
 import tailwindcss from '@tailwindcss/postcss';
 import { fileURLToPath, URL } from 'node:url';
 import { defineConfig, type Plugin } from 'vite';
@@ -15,7 +16,7 @@ function netlifyMetadata(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), netlifyMetadata()],
+  plugins: [react(), netlifyMetadata(), sites()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('.', import.meta.url)),
